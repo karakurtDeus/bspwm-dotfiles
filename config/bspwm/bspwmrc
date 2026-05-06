@@ -1,0 +1,106 @@
+#! /bin/sh
+
+#       _ /\      /\ _
+#      / X  \.--./  X \
+#     /_/ \/`    `\/ \_\
+#    /|(`-/\_/)(\_/\-`)|\
+#   ( |` (_(.oOOo.)_) `| )
+#   ` |  `//\(  )/\\`  | `
+#     (  // ()\/() \\  )
+#      ` (   \   /   ) `
+#         \         /
+#          `       `
+
+# env
+export XDG_CURRENT_DESKTOP=bspwm
+export DESKTOP_SESSION=bspwm
+export XDG_SESSION_DESKTOP=bspwm
+export XDG_SESSION_TYPE=x11
+export GDK_BACKEND=x11
+export _JAVA_AWT_WM_NONREPARENTING=1
+# ===
+
+# hotkey
+pgrep -x sxhkd >/dev/null || sxhkd &
+# notification daemon
+pgrep -x dunst >/dev/null || dunst &
+# usb auto mount
+pgrep -x udiskie >/dev/null || udiskie --tray &
+# compositor
+picom --config ~/.config/picom/picom.conf &
+# copylist
+greenclip daemon &
+# auto config generate
+~/.config/bspwm/bin/script_write_configs.py &
+# change language
+~/.config/bspwm/bin/script_keyboard.py &
+
+# wallpaper select
+pkill -f "/home/dmytro/.config/bspwm/bin/script_select_background.py"
+~/.config/bspwm/bin/script_select_background.py &
+# ================
+
+# color select
+~/.config/bspwm/bin/script_color.py &
+# ============
+
+# font select
+~/.config/bspwm/bin/script_font.py
+# ==========
+
+# monitor configure
+sleep 2
+
+PRIMARY="$(xrandr --query | awk '/ primary/ {print $1; exit}')"
+MONITORS="$(bspc query -M --names)"
+
+if [ -n "$PRIMARY" ] && printf '%s\n' "$MONITORS" | grep -qx "$PRIMARY"; then
+  ORDERED="$(printf '%s\n' "$PRIMARY" $(printf '%s\n' "$MONITORS" | grep -vx "$PRIMARY"))"
+  bspc wm -O $(printf '%s ' $ORDERED)
+else
+  ORDERED="$MONITORS"
+fi
+
+COUNT="$(printf '%s\n' $ORDERED | sed '/^$/d' | wc -l)"
+
+if [ "$COUNT" -eq 1 ]; then
+  mon="$(printf '%s\n' "$ORDERED" | head -n1)"
+  bspc monitor "$mon" -d 1 2 3 4 5 6
+else
+  start=1
+  printf '%s\n' "$ORDERED" | while IFS= read -r mon; do
+    [ -z "$mon" ] && continue
+    bspc monitor "$mon" -d "$start" "$((start + 1))" "$((start + 2))"
+    start=$((start + 3))
+  done
+fi
+# =================
+
+# bar
+~/.config/bspwm/bin/run_polybar.py &
+# ===
+
+# theme
+bspc config border_width 2
+bspc config window_gap 5
+## color
+COLOR_FILE="$HOME/.config/bspwm/conf/color.txt"
+
+if [ -f "$COLOR_FILE" ]; then
+  MAIN_COLOR=$(grep '^MAIN=' "$COLOR_FILE" | cut -d= -f2)
+
+  if [ -n "$MAIN_COLOR" ]; then
+    bspc config focused_border_color "$MAIN_COLOR"
+  fi
+fi
+## ----
+bspc config split_ratio 0.52
+bspc config borderless_monocle true
+bspc config gapless_monocle true
+
+# window
+bspc config pointer_modifier super
+bspc config pointer_action1 move
+bspc config pointer_action2 resize_side
+bspc config pointer_action3 resize_corner
+# =====

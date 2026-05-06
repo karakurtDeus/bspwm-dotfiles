@@ -216,3 +216,56 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+
+# -------------------------------------- #
+#
+# -------------------------------------- #
+
+
+config/bspwm/bin/__pycache__/
+# vm
+config/*
+## wm
+config/bspwm/conf/**
+!config/bspwm/**
+!config/bspwm/
+config/bspwm/**/__pycache__/
+## demon hotkays
+!config/sxhkd/
+!config/sxhkd/**
+## terminal
+!config/kitty/
+!config/kitty/**
+## editor
+!config/nvim/
+!config/nvim/**
+config/nvim/lazy-lock.json
+## wallpaper
+!config/wallpaper/
+!config/wallpaper/**
+## compositor
+!config/picom/
+!config/picom/**
+## bar
+!config/polybar/
+!config/polybar/**
+## file manager
+!config/yazi/
+!config/yazi/**
+## dunst
+!config/dunst/
+!config/dunst/**
+## rofi 
+!config/rofi/
+!config/rofi/**
+# lockscreen
+!config/i3lock/
+!config/i3lock/**
+# anki for TTS
+!/config/speech-dispatcher/
+!/config/speech-dispatcher/**
+# fastfetch
+!/config/fastfetch/
+!/config/fastfetch/**
+config/bspwm/conf/
