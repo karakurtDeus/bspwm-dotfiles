@@ -234,9 +234,6 @@ config/bspwm/**/__pycache__/
 ## demon hotkays
 !config/sxhkd/
 !config/sxhkd/**
-## terminal
-!config/kitty/
-!config/kitty/**
 ## editor
 !config/nvim/
 !config/nvim/**
