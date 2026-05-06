@@ -1,8 +1,0 @@
-* {
-    font: "JetBrainsMono Nerd Font 11";
-    main: #329DA4;
-    bg: #000000;
-    fg: #ffffff;
-    bg-alt: #000000;
-    secondary-text: #C5C8C6;
-}

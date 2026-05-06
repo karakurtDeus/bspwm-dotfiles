@@ -253,9 +253,6 @@ config/nvim/lazy-lock.json
 ## file manager
 !config/yazi/
 !config/yazi/**
-## rofi 
-!config/rofi/
-!config/rofi/**
 # lockscreen
 !config/i3lock/
 !config/i3lock/**
