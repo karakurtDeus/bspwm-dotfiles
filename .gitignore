@@ -269,3 +269,9 @@ config/nvim/lazy-lock.json
 !/config/fastfetch/
 !/config/fastfetch/**
 config/bspwm/conf/
+# gtk
+!config/gtk-3.0/
+!config/gtk-3.0/**
+
+!config/gtk-4.0/
+!config/gtk-4.0/**
