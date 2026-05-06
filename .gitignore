@@ -253,9 +253,6 @@ config/nvim/lazy-lock.json
 ## file manager
 !config/yazi/
 !config/yazi/**
-## dunst
-!config/dunst/
-!config/dunst/**
 ## rofi 
 !config/rofi/
 !config/rofi/**
