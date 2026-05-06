@@ -259,9 +259,6 @@ config/nvim/lazy-lock.json
 # anki for TTS
 !/config/speech-dispatcher/
 !/config/speech-dispatcher/**
-# fastfetch
-!/config/fastfetch/
-!/config/fastfetch/**
 config/bspwm/conf/
 # gtk
 !config/gtk-3.0/
