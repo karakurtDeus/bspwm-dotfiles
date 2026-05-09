@@ -127,8 +127,17 @@ def apply_bspwm_color(main: str) -> bool:
 
 
 def reload_dunst() -> None:
-    subprocess.run(["killall", "dunst"], stderr=subprocess.DEVNULL)
-    subprocess.Popen(["dunst"])
+    subprocess.run(
+        ["killall", "dunst"],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+
+    subprocess.Popen(
+        ["dunst"],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
 
 
 def main() -> None:
