@@ -55,22 +55,47 @@ PRIMARY="$(xrandr --query | awk '/ primary/ {print $1; exit}')"
 MONITORS="$(bspc query -M --names)"
 
 if [ -n "$PRIMARY" ] && printf '%s\n' "$MONITORS" | grep -qx "$PRIMARY"; then
-  ORDERED="$(printf '%s\n' "$PRIMARY" $(printf '%s\n' "$MONITORS" | grep -vx "$PRIMARY"))"
-  bspc wm -O $(printf '%s ' $ORDERED)
+  ORDERED="$(
+    printf '%s\n' "$PRIMARY"
+    printf '%s\n' "$MONITORS" | grep -vx "$PRIMARY"
+  )"
 else
   ORDERED="$MONITORS"
 fi
 
-COUNT="$(printf '%s\n' $ORDERED | sed '/^$/d' | wc -l)"
+ORDERED="$(printf '%s\n' "$ORDERED" | sed '/^$/d')"
+
+CURRENT_ORDER="$(bspc query -M --names | sed '/^$/d')"
+
+if [ "$ORDERED" != "$CURRENT_ORDER" ]; then
+  bspc wm -O $(printf '%s\n' "$ORDERED")
+fi
+
+COUNT="$(printf '%s\n' "$ORDERED" | wc -l)"
+
+apply_desktops() {
+  mon="$1"
+  shift
+
+  wanted="$*"
+  current="$(bspc query -D -m "$mon" --names | xargs)"
+
+  if [ "$current" != "$wanted" ]; then
+    bspc monitor "$mon" -d "$@"
+  fi
+}
 
 if [ "$COUNT" -eq 1 ]; then
   mon="$(printf '%s\n' "$ORDERED" | head -n1)"
-  bspc monitor "$mon" -d 1 2 3 4 5 6
+  apply_desktops "$mon" 1 2 3 4 5 6
 else
   start=1
+
   printf '%s\n' "$ORDERED" | while IFS= read -r mon; do
     [ -z "$mon" ] && continue
-    bspc monitor "$mon" -d "$start" "$((start + 1))" "$((start + 2))"
+
+    apply_desktops "$mon" "$start" "$((start + 1))" "$((start + 2))"
+
     start=$((start + 3))
   done
 fi

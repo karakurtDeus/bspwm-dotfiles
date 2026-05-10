@@ -369,7 +369,8 @@ label = %output%
 click-left = ~/.config/bspwm/bin/script_calendar.py
 
 [settings]
-screenchange-reload = true
+#rscreenchange-reload = true
+screenchange-reload = false
 pseudo-transparency = false
 
 [module/power]
