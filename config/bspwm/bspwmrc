@@ -48,6 +48,10 @@ pkill -f "/home/dmytro/.config/bspwm/bin/script_select_background.py"
 ~/.config/bspwm/bin/script_font.py
 # ==========
 
+# screen timeout
+~/.config/bspwm/bin/script_screen.py &
+# ==============
+
 # monitor configure
 sleep 2
 
