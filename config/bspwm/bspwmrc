@@ -35,6 +35,8 @@ greenclip daemon &
 # change language
 ~/.config/bspwm/bin/script_keyboard.py &
 
+nm-applet &
+
 # wallpaper select
 pkill -f "/home/dmytro/.config/bspwm/bin/script_select_background.py"
 ~/.config/bspwm/bin/script_select_background.py &
