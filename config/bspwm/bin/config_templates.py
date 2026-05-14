@@ -321,10 +321,9 @@ blacklist-0 = num lock
 
 label-layout = %layout%
 
-label-indicator-padding = 2
-label-indicator-margin = 1
-label-indicator-foreground = ${colors.background}
-label-indicator-background = ${colors.secondary}
+#label-indicator-padding = 1
+#label-indicator-margin = 1
+label-indicator-foreground = ${colors.primary}
 
 [module/memory]
 type = internal/memory
