@@ -5,6 +5,8 @@ from custom_script_about_author import print_image
 from pathlib import Path
 import getpass
 import re
+import os
+import pwd
 
 IMAGE_PATH = Path.home() / ".config" / "bspwm" / "wallpaper" / "rofi" / "custom_script_pc_info.png"
 
@@ -51,8 +53,27 @@ def c(text: str, color: str | None) -> str:
     return f"\033[38;2;{r};{g};{b}m{text}\033[0m"
 
 
+def get_real_shell() -> str:
+    shell = os.environ.get("SHELL")
+
+    if not shell:
+        shell = pwd.getpwuid(os.getuid()).pw_shell
+
+    return Path(shell).name
+
+
 def print_info():
-    subprocess.run(["fastfetch", "--logo", "none"])
+    main_color = load_main_color()
+    shell = get_real_shell()
+
+    subprocess.run([
+        "fastfetch",
+        "--logo", "none",
+        "--structure",
+        "title:separator:os:kernel:uptime:packages:display:wm:cursor:terminal:terminalfont:cpu:gpu:memory:swap:disk:localip:locale"
+    ])
+
+    print(f"{c('Shell:', main_color)} {shell}\n")
 
 
 def main() -> None:
