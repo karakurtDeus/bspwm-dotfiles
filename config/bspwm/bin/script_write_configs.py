@@ -4,7 +4,7 @@ from pathlib import Path
 import re
 import subprocess
 
-from config_templates import polybar_config
+from config_templates import polybar_config, kitty_config
 
 DEFAULT_MAIN = "#329DA4"
 
@@ -18,6 +18,9 @@ def write_file(path: Path, content: str) -> bool:
         print(f"FAILED write {path}: {e}")
         return False
 
+def write_kitty() -> bool:
+    path = Path.home() / ".config/kitty/kitty.conf"
+    return write_file(path, kitty_config())
 
 def ensure_color_file() -> Path:
     conf_dir = Path.home() / ".config/bspwm/conf"
@@ -169,6 +172,11 @@ def main() -> None:
         reload_polybar()
     else:
         print("FAILED: write polybar config")
+
+    if write_kitty():
+        print("OK: write kitty config")
+    else:
+        print("FAILED: write kitty config")
 
 
 if __name__ == "__main__":
