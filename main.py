@@ -131,6 +131,7 @@ std_pkg = [
 
     # network
     "networkmanager",
+    "network-manager-applet",
 
     # gtk
     "gtk3",

@@ -350,12 +350,19 @@ label-disconnected = %{F#F0C674}%ifname%%{F#707880} disconnected
 [module/wlan]
 inherit = network-base
 interface-type = wireless
+
+format-connected = %{A1:nm-connection-editor &:}<label-connected>%{A}
+
 label-connected =   ↓%downspeed% ↑%upspeed%
+
 interval = 1
 
 [module/eth]
 inherit = network-base
 interface-type = wired
+
+format-connected = %{A1:nm-connection-editor &:}<label-connected>%{A}
+
 label-connected = 󰌗 ↓%downspeed% ↑%upspeed%
 
 [module/date]
@@ -369,8 +376,8 @@ label = %output%
 click-left = ~/.config/bspwm/bin/script_calendar.py
 
 [settings]
-#rscreenchange-reload = true
-screenchange-reload = false
+screenchange-reload = true
+#screenchange-reload = false
 pseudo-transparency = false
 
 [module/power]
