@@ -21,6 +21,7 @@ std_pkg = [
     "ttf-nerd-fonts-symbols",
     "ttf-jetbrains-mono-nerd",
     "noto-fonts",
+    "noto-fonts-emoji",
 
     # notify
     "dunst",
@@ -54,6 +55,7 @@ std_pkg = [
     "npm",
     "git",
     "base-devel",
+    "code",
 
     # bash
     "zsh",
