@@ -37,5 +37,5 @@
 
 <div align="center">
     <h4>Easy System Customization</h4>
-    <video src="./readme/img/color.webm" autoplay loop muted playsinline width="700"></video>
+    <video src="./readme/img/color.webm" />  
 </div>
