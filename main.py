@@ -78,6 +78,7 @@ std_pkg = [
     # clipboard
     "xclip",
     "xsel",
+    "clipmenu",
 
     # launcher
     "rofi",
@@ -161,7 +162,7 @@ yay_pkg = [
 ]
 
 yay_list_pkg = [
-    "greenclip",
+#    "greenclip", change on clipmenu (without img)
     "i3lock-color",
     "xwinwrap-git",
     "tokyonight-gtk-theme-git",

@@ -29,7 +29,7 @@ pgrep -x udiskie >/dev/null || udiskie --tray &
 # compositor
 picom --config ~/.config/picom/picom.conf &
 # copylist
-greenclip daemon &
+pgrep -x clipmenud >/dev/null || clipmenud &
 # auto config generate
 ~/.config/bspwm/bin/script_write_configs.py &
 # change language

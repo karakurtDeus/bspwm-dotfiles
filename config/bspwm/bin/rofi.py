@@ -122,11 +122,15 @@ def rofi_launcher(theme):
 def rofi_buffer(theme):
     subprocess.Popen(
         [
-            "rofi",
-            "-modi", "clipboard:greenclip print",
-            "-show", "clipboard",
+            "clipmenu",
+            "-i",
+            "-p", "Clipboard",
             "-theme-str", theme,
-        ]
+        ],
+        env={
+            **os.environ,
+            "CM_LAUNCHER": "rofi",
+        }
     )
 
 def rofi_background_img(theme):
