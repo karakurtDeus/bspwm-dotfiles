@@ -28,15 +28,18 @@
 
 </div>
 
+<div align="center">
+    <h4>Easy System Customization</h4>
+</div>
+
+
+Easy customization through editable `.conf` files in `~/.config/bspwm/conf` with comments and examples for colors, fonts, wallpapers, keyboard layouts, screen timeout and workspace rules.
+
+
+https://github.com/karakurtDeus/bspwm-dotfiles/issues/1#issue-4460739984
 
 <div align="center">
 <br>
     <h4>System Control via Hotkeys</h4>
     <img src="./readme/img/screenshot_1.png" />  
 </div>
-
-<div align="center">
-    <h4>Easy System Customization</h4>
-</div>
-
-https://github.com/user-attachments/assets/e98e7ebd-1d1e-4309-99c3-2941d35a346d
