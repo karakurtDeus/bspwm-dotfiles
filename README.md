@@ -34,3 +34,8 @@
     <h4>System Control via Hotkeys</h4>
     <img src="./readme/img/screenshot_1.png" />  
 </div>
+
+<div align="center">
+    <h4>Easy System Customization</h4>
+    <video src="./readme/img/color.webm" autoplay loop muted playsinline width="700"></video>
+</div>

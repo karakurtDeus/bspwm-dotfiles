@@ -176,6 +176,7 @@ work_and_home_pkg = [
     "obs-studio",
     "speech-dispatcher",
     "espeak-ng",
+    "kdenlive",
 ]
 
 nvidia_pkg = [
