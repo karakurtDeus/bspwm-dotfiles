@@ -1,7 +1,8 @@
 <div align="center">
     <img src="./config/bspwm/wallpaper/rofi/custom_script_pc_info.png" />
-    <h3 style="margin-bottom: 0">karakurtOS</h3>
-    <p style="margin-top: 0px">bspwm-dotfiles</p>
+    <h3>karakurtOS</h3>
+    <p>bspwm-dotfiles</p>
+    <br>
 </div>
 
 <div align="center">
