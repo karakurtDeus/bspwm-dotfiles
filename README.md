@@ -37,5 +37,6 @@
 
 <div align="center">
     <h4>Easy System Customization</h4>
-    <video src="./readme/img/color.webm" />  
 </div>
+
+https://github.com/user-attachments/assets/e98e7ebd-1d1e-4309-99c3-2941d35a346d
