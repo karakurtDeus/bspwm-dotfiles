@@ -36,7 +36,8 @@
 Easy customization through editable `.conf` files in `~/.config/bspwm/conf` with comments and examples for colors, fonts, wallpapers, keyboard layouts, screen timeout and workspace rules.
 
 
-https://github.com/karakurtDeus/bspwm-dotfiles/issues/1#issue-4460739984
+https://github.com/user-attachments/assets/3592da4d-bd3b-4380-90b6-60ca7c1717cd
+
 
 <div align="center">
 <br>
