@@ -17,11 +17,11 @@
  - OS: [**Arch**](https://www.google.com/search?q=Arch)
  - WM: [**BSPWM**](https://www.google.com/search?q=bspwm)
  - Bar: [**Polybar**](https://www.google.com/search?q=Polybar)
- - Compositor: [**Picom**](https://www.google.com/search?q=Picom)
- - Terminal: [**Alacritty**](https://www.google.com/search?q=alacritty)
- - App Launcher: [**Rofi**](https://www.google.com/search?q=Rofi)
  - Shell: [**Zsh**](https://www.google.com/search?q=Zsh)
- - Display manager: [**LightDM**](https://www.google.com/search?q=LightDM)
+ - Terminal: [**Kitty**](https://www.google.com/search?q=Kitty+terminal)
+ - Compositor: [**Picom**](https://www.google.com/search?q=Picom)
+ - File manager: [**yazi**](https://www.google.com/search?q=yazi+file+manager)
+ - App Launcher: [**Rofi**](https://www.google.com/search?q=Rofi)
 
 </br>
 
