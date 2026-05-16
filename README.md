@@ -24,6 +24,10 @@
 </div>
 
 
-<div>
+<div align="center">
 
+<br>
+    <h4>System Control via Hotkeys</h4>
+    <img src="./readme/img/screenshot_1.png" />
+    
 </div>
