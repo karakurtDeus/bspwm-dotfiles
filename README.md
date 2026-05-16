@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="./config/bspwm/wallpaper/rofi/custom_script_pc_info.png" />
+    <img src="./config/bspwm/wallpaper/rofi/custom_script_pc_info.png" style="max-width: 250px;" />
     <h3>karakurtOS</h3>
     <p>
         bspwm-dotfile<br>
