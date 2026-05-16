@@ -1,7 +1,10 @@
 <div align="center">
     <img src="./config/bspwm/wallpaper/rofi/custom_script_pc_info.png" />
     <h3>karakurtOS</h3>
-    <p>bspwm-dotfiles</p>
+    <p>
+        bspwm-dotfile<br>
+        console-like system
+    </p>
     <br>
 </div>
 
@@ -15,6 +18,12 @@
 | Shell | Zsh |
 | Terminal | Kitty |
 | Compositor | Picom |
+| File manager | yazi |
 | App Launcher | Rofi |
+
+</div>
+
+
+<div>
 
 </div>
