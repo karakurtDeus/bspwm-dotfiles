@@ -8,18 +8,23 @@
     <br>
 </div>
 
-<div align="center">
+<div>
 
-| Component | System Info |
-| :--- | ---: |
-| OS | Arch |
-| WM | BSPWM |
-| Bar | Polybar |
-| Shell | Zsh |
-| Terminal | Kitty |
-| Compositor | Picom |
-| File manager | yazi |
-| App Launcher | Rofi |
+<img src="./config/bspwm/wallpaper/rofi/custom_script.png" alt="logo" align="right" height="250">
+
+<br>
+
+ - OS: [**Arch**](https://www.google.com/search?q=Arch)
+ - WM: [**BSPWM**](https://www.google.com/search?q=bspwm)
+ - Bar: [**Polybar**](https://www.google.com/search?q=Polybar)
+ - Compositor: [**Picom**](https://www.google.com/search?q=Picom)
+ - Terminal: [**Alacritty**](https://www.google.com/search?q=alacritty)
+ - App Launcher: [**Rofi**](https://www.google.com/search?q=Rofi)
+ - Shell: [**Zsh**](https://www.google.com/search?q=Zsh)
+ - Display manager: [**LightDM**](https://www.google.com/search?q=LightDM)
+
+</br>
+
 
 </div>
 
