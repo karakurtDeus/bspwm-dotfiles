@@ -26,6 +26,7 @@ def main():
     "Help",
     "System info",
     "About Author",
+    "FX Calculator",
     ]
 
     choice = rofi_menu(options, get_theme(img), "Custom script")
@@ -57,6 +58,11 @@ def main():
         subprocess.Popen([
             "kitty", "-e", "python",
             os.path.expanduser("~/.config/bspwm/bin/custom_script_help.py")
+        ])
+    elif choice == "FX Calculator":
+        subprocess.Popen([
+            "kitty", "-e", "python",
+            os.path.expanduser("~/.config/bspwm/bin/custom_script_valute_calc.py")
         ])
 
 if __name__ == "__main__":
