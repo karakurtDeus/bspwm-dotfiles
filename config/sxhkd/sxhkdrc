@@ -30,7 +30,8 @@ super + p
 
 # file manager
 super + e
-    kitty -e yazi
+    thunar
+    #kitty -e yazi
 
 # make sxhkd reload its configuration files:
 super + Escape

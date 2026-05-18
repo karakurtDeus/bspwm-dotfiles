@@ -88,8 +88,19 @@ std_pkg = [
 
     # file manager
     "yazi",
+
+    # thunar
+    "thunar",
+    "tumbler",
+
+    # mounts / usb / previews
+    "gvfs",
+    "gvfs-mtp",
+
+    # previews
     "ffmpegthumbnailer",
     "poppler",
+
     "fd",
     "ripgrep",
     "fzf",
