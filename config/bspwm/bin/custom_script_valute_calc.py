@@ -7,6 +7,20 @@ import subprocess
 
 IMAGE_PATH = Path.home() / ".config" / "bspwm" / "wallpaper" / "rofi" / "custom_script_valute_calc.png"
 
+def print_wrapped(items, max_chars=120):
+    line = ""
+
+    for item in items:
+        part = item + ", "
+
+        if len(line) + len(part) > max_chars:
+            print(line.rstrip(", "))
+            line = part
+        else:
+            line += part
+
+    if line:
+        print(line.rstrip(", "))
 
 def print_image(path: Path) -> None:
     if not path.exists():
@@ -36,7 +50,7 @@ def get_rates(base="USD"):
 
 def input_currency(currencies):
     print("Available currencies:\n")
-    print(", ".join(currencies))
+    print_wrapped(currencies, max_chars=80)
 
     base = input("\nEnter the base currency: ").upper()
 
