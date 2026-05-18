@@ -20,6 +20,18 @@ keyboard_shortcuts_window = [
     ("super + right mouse", "resize window from corner"),
 ]
 
+python_commands = [
+    ("python -m venv venv", "create virtual environment"),
+    ("source venv/bin/activate", "activate virtual environment"),
+    ("pip freeze > requirements.txt", "save dependencies"),
+    ("pip install -r requirements.txt", "install dependencies"),
+]
+
+audio_commands = [
+    ("pactl list short sinks", "list audio sinks"),
+    ("pactl set-default-sink SINK_NAME", "set default audio sink"),
+]
+
 keyboard_shortcuts_system = [
     ("super + alt + r", "reload bspwm"),
     ("super + escape", "reload sxhkd"),
@@ -185,6 +197,8 @@ def keyboard_help(color):
     blocks = [
         keyboard_shortcuts_window,
         keyboard_shortcuts_system,
+        python_commands,
+        audio_commands,
         keyboard_shortcuts_yazi,
         keyboard_shortcuts_nvim,
     ]
@@ -206,8 +220,22 @@ def keyboard_help(color):
     )
 
     print_block(
+        "PYTHON COMMANDS",
+        python_commands,
+        color,
+        line_width,
+    )
+
+    print_block(
         "YAZI FILE MANAGER",
         keyboard_shortcuts_yazi,
+        color,
+        line_width,
+    )
+
+    print_block(
+        "AUDIO COMMANDS",
+        audio_commands,
         color,
         line_width,
     )
