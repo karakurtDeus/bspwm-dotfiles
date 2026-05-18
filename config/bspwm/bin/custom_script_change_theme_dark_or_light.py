@@ -10,7 +10,8 @@ GTK_SCHEMA = "org.gnome.desktop.interface"
 THEME_DARK = "Tokyonight-Dark"
 THEME_LIGHT = "Tokyonight-Light"
 
-ICON_THEME = "Adwaita"
+ICON_THEME = "oomox-Tokyonight-Dark"
+
 FONT_NAME = "Adwaita Sans 11"
 CURSOR_THEME = "Adwaita"
 CURSOR_SIZE = 0
@@ -76,12 +77,14 @@ def write_settings_ini(theme_name: str) -> None:
 
 def set_light() -> None:
     gsettings_set(GTK_SCHEMA, "gtk-theme", THEME_LIGHT)
+    gsettings_set(GTK_SCHEMA, "icon-theme", ICON_THEME)
     gsettings_set(GTK_SCHEMA, "color-scheme", "default")
     write_settings_ini(THEME_LIGHT)
 
 
 def set_dark() -> None:
     gsettings_set(GTK_SCHEMA, "gtk-theme", THEME_DARK)
+    gsettings_set(GTK_SCHEMA, "icon-theme", ICON_THEME)
     gsettings_set(GTK_SCHEMA, "color-scheme", "prefer-dark")
     write_settings_ini(THEME_DARK)
 
@@ -100,6 +103,8 @@ def main() -> None:
         else:
             set_dark()
             print(f"Switched to DARK: {THEME_DARK}")
+
+        print(f"Icon theme: {ICON_THEME}")
 
     except subprocess.CalledProcessError as exc:
         print("gsettings command failed")
