@@ -181,6 +181,8 @@ yay_list_pkg = [
 ]
 
 work_and_home_pkg = [
+    "inkscape",
+    "krita",
     "telegram-desktop",
     "discord",
     "anki",
