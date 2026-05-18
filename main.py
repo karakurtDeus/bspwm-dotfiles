@@ -163,6 +163,7 @@ yay_pkg = [
 
 yay_list_pkg = [
 #    "greenclip", change on clipmenu (without img)
+#    "eww",
     "i3lock-color",
     "xwinwrap-git",
     "tokyonight-gtk-theme-git",
@@ -643,46 +644,6 @@ def set_zsh_default() -> bool:
         print("zsh default: FAILED")
         if e.stderr:
             print(e.stderr.strip())
-        return False
-
-def setup_zsh() -> bool:
-    zsh_dir = Path.home() / ".config" / "zsh"
-
-    repos = {
-        "plugins/zsh-autosuggestions": "https://github.com/zsh-users/zsh-autosuggestions.git",
-        "plugins/zsh-syntax-highlighting": "https://github.com/zsh-users/zsh-syntax-highlighting.git",
-        "powerlevel10k": "https://github.com/romkatv/powerlevel10k.git",
-    }
-
-    try:
-        if zsh_dir.exists() or zsh_dir.is_symlink():
-            shutil.rmtree(zsh_dir)
-            print(f"zsh dirs: REMOVED {zsh_dir}")
-
-        for rel_path, repo_url in repos.items():
-            dst = zsh_dir / rel_path
-            dst.parent.mkdir(parents=True, exist_ok=True)
-
-            subprocess.run(
-                ["git", "clone", "--depth", "1", repo_url, str(dst)],
-                check=True,
-                capture_output=True,
-                text=True,
-            )
-
-            print(f"zsh dirs OK: {rel_path}")
-
-        return True
-
-    except subprocess.CalledProcessError as e:
-        print("zsh dirs: FAILED")
-        if e.stderr:
-            print(e.stderr.strip())
-        return False
-
-    except Exception as e:
-        print("zsh dirs: FAILED")
-        print(str(e))
         return False
 
 def setup_zsh() -> bool:
