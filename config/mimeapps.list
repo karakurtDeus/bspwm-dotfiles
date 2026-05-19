@@ -32,3 +32,4 @@ application/x-shellscript=code-oss.desktop
 image/x-xcursor=code-oss.desktop;
 application/x-shellscript=code-oss.desktop;
 image/png=krita_png.desktop;
+application/x-x509-ca-cert=gcr-viewer.desktop;code-oss.desktop;
