@@ -31,9 +31,9 @@ def dunst_config(main, bg, fg):
 """
 
 
-def rofi_config(main, bg, fg, secondary):
+def rofi_config(main, bg, fg, secondary, font_size):
     return f"""* {{
-    font: "JetBrainsMono Nerd Font 11";
+    font: "JetBrainsMono Nerd Font {font_size}";
     main: {main};
     bg: {bg};
     fg: {fg};

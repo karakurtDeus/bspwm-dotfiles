@@ -9,7 +9,7 @@ def load_config():
     conf_file = Path.home() / ".config" / "bspwm" / "conf" / "font.conf"
 
     default = """# FONT_SIZE_GLOBAL:
-# if set, overrides kitty, polybar and dunst values
+# if set, overrides kitty, polybar, dunst and rofi values
 FONT_SIZE_GLOBAL=
 
 # FONT_SIZE_KITTY:
@@ -20,18 +20,23 @@ FONT_SIZE_POLYBAR=10;2
 
 # FONT_SIZE_DUNST:
 FONT_SIZE_DUNST=10
+
+# FONT_SIZE_ROFI:
+FONT_SIZE_ROFI=10.5
 """
 
     conf_file.parent.mkdir(parents=True, exist_ok=True)
 
     if not conf_file.exists():
-        conf_file.write_text(default)
+        conf_file.write_text(default, encoding="utf-8")
 
-    FONT_SIZE_GLOBAL = ""
-    FONT_SIZE_KITTY = "10.5"
-    FONT_SIZE_DUNST = "10"
+    values = {
+        "FONT_SIZE_GLOBAL": "",
+        "FONT_SIZE_KITTY": "10.5",
+        "FONT_SIZE_DUNST": "10",
+    }
 
-    for line in conf_file.read_text().splitlines():
+    for line in conf_file.read_text(encoding="utf-8").splitlines():
         if "=" not in line:
             continue
 
@@ -39,14 +44,10 @@ FONT_SIZE_DUNST=10
         key = key.strip()
         value = value.strip()
 
-        if key == "FONT_SIZE_GLOBAL":
-            FONT_SIZE_GLOBAL = value
-        elif key == "FONT_SIZE_KITTY":
-            FONT_SIZE_KITTY = value
-        elif key == "FONT_SIZE_DUNST":
-            FONT_SIZE_DUNST = value
+        if key in values:
+            values[key] = value
 
-    return FONT_SIZE_GLOBAL, FONT_SIZE_KITTY, FONT_SIZE_DUNST
+    return values
 
 
 def reload_dunst():
@@ -71,12 +72,12 @@ def change_kitty_font(font_size_global: str, font_size_kitty: str) -> bool:
             print("kitty error: kitty.conf not found")
             return False
 
-        text = path.read_text()
         font_size = font_size_global if font_size_global else font_size_kitty
 
         if not font_size:
             return False
 
+        text = path.read_text(encoding="utf-8")
         lines = text.splitlines()
 
         cleaned_lines = []
@@ -105,7 +106,7 @@ def change_kitty_font(font_size_global: str, font_size_kitty: str) -> bool:
         if not inserted:
             new_lines.insert(0, f"font_size {font_size}")
 
-        path.write_text("\n".join(new_lines) + "\n")
+        path.write_text("\n".join(new_lines) + "\n", encoding="utf-8")
         return True
 
     except Exception as e:
@@ -121,13 +122,14 @@ def change_dunst_font(font_size_global: str, font_size_dunst: str) -> bool:
             print("dunst error: dunstrc not found")
             return False
 
-        text = path.read_text()
         font_size = font_size_global if font_size_global else font_size_dunst
 
         if not font_size:
             return False
 
+        text = path.read_text(encoding="utf-8")
         lines = text.splitlines()
+
         new_lines = []
         replaced = False
 
@@ -155,7 +157,7 @@ def change_dunst_font(font_size_global: str, font_size_dunst: str) -> bool:
 
             new_lines = result
 
-        path.write_text("\n".join(new_lines) + "\n")
+        path.write_text("\n".join(new_lines) + "\n", encoding="utf-8")
         return True
 
     except Exception as e:
@@ -164,7 +166,11 @@ def change_dunst_font(font_size_global: str, font_size_dunst: str) -> bool:
 
 
 def main():
-    font_size_global, font_size_kitty, font_size_dunst = load_config()
+    config = load_config()
+
+    font_size_global = config["FONT_SIZE_GLOBAL"]
+    font_size_kitty = config["FONT_SIZE_KITTY"]
+    font_size_dunst = config["FONT_SIZE_DUNST"]
 
     print("Loaded config:")
     print(f"FONT_SIZE_GLOBAL={font_size_global}")

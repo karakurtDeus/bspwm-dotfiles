@@ -18,9 +18,11 @@ def write_file(path: Path, content: str) -> bool:
         print(f"FAILED write {path}: {e}")
         return False
 
+
 def write_kitty() -> bool:
     path = Path.home() / ".config/kitty/kitty.conf"
     return write_file(path, kitty_config())
+
 
 def ensure_color_file() -> Path:
     conf_dir = Path.home() / ".config/bspwm/conf"
@@ -69,7 +71,7 @@ def ensure_font_file() -> Path:
     if not font_file.exists():
         font_file.write_text(
             """# FONT_SIZE_GLOBAL:
-# if set, overrides kitty, polybar and dunst values
+# if set, overrides kitty, polybar, dunst and rofi values
 FONT_SIZE_GLOBAL=
 
 # FONT_SIZE_KITTY:
@@ -80,6 +82,9 @@ FONT_SIZE_POLYBAR=10;2
 
 # FONT_SIZE_DUNST:
 FONT_SIZE_DUNST=10
+
+# FONT_SIZE_ROFI:
+FONT_SIZE_ROFI=10.5
 """
         )
 
@@ -146,7 +151,10 @@ def write_polybar(main: str, font_size: str) -> bool:
 
 
 def reload_polybar() -> None:
-    subprocess.run(["killall", "-q", "polybar"], stderr=subprocess.DEVNULL)
+    subprocess.run(
+        ["killall", "-q", "polybar"],
+        stderr=subprocess.DEVNULL,
+    )
 
     subprocess.run(
         [
