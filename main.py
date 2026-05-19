@@ -117,6 +117,12 @@ std_pkg = [
     "wireplumber",
     "alsa-utils",
 
+    # img
+    "loupe",
+
+    # video
+    "celluloid",
+
     # screenshot
     "flameshot",
 
@@ -175,6 +181,7 @@ yay_pkg = [
 yay_list_pkg = [
 #    "greenclip", change on clipmenu (without img)
 #    "eww",
+    "qogir-cursor-theme",
     "i3lock-color",
     "xwinwrap-git",
     "tokyonight-gtk-theme-git",

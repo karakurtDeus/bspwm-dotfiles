@@ -263,3 +263,5 @@ config/bspwm/conf/
 
 !config/fontconfig/
 !config/fontconfig/**
+
+!config/mimeapps.list

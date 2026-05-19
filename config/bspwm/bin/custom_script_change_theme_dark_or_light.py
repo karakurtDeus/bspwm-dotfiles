@@ -10,11 +10,11 @@ GTK_SCHEMA = "org.gnome.desktop.interface"
 THEME_DARK = "Tokyonight-Dark"
 THEME_LIGHT = "Tokyonight-Light"
 
-ICON_THEME = "oomox-Tokyonight-Dark"
+ICON_THEME = "Tokyonight-Dark-Cyan"
 
 FONT_NAME = "Adwaita Sans 11"
-CURSOR_THEME = "Adwaita"
-CURSOR_SIZE = 0
+CURSOR_THEME = "Qogir-cursors"
+CURSOR_SIZE = 24
 TOOLBAR_STYLE = "GTK_TOOLBAR_BOTH_HORIZ"
 TOOLBAR_ICON_SIZE = "GTK_ICON_SIZE_LARGE_TOOLBAR"
 BUTTON_IMAGES = 0
@@ -24,6 +24,29 @@ INPUT_FEEDBACK_SOUNDS = 1
 XFT_ANTIALIAS = 1
 XFT_HINTING = 1
 XFT_HINTSTYLE = "hintmedium"
+
+def set_cursor_global() -> None:
+    cursor_size = CURSOR_SIZE or 24
+
+    gsettings_set(GTK_SCHEMA, "cursor-theme", CURSOR_THEME)
+    gsettings_set(GTK_SCHEMA, "cursor-size", str(cursor_size))
+
+    xresources = Path.home() / ".Xresources"
+    content = xresources.read_text(encoding="utf-8") if xresources.exists() else ""
+
+    lines = [
+        line for line in content.splitlines()
+        if not line.strip().startswith("Xcursor.theme:")
+        and not line.strip().startswith("Xcursor.size:")
+    ]
+
+    lines.append(f"Xcursor.theme: {CURSOR_THEME}")
+    lines.append(f"Xcursor.size: {cursor_size}")
+
+    xresources.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+    subprocess.run(["xrdb", "-merge", str(xresources)], check=False)
+    subprocess.run(["xsetroot", "-cursor_name", "left_ptr"], check=False)
 
 
 def gsettings_get(schema: str, key: str) -> str:
@@ -78,15 +101,20 @@ def write_settings_ini(theme_name: str) -> None:
 def set_light() -> None:
     gsettings_set(GTK_SCHEMA, "gtk-theme", THEME_LIGHT)
     gsettings_set(GTK_SCHEMA, "icon-theme", ICON_THEME)
+    gsettings_set(GTK_SCHEMA, "cursor-theme", CURSOR_THEME)
+    gsettings_set(GTK_SCHEMA, "cursor-size", str(CURSOR_SIZE or 24))
     gsettings_set(GTK_SCHEMA, "color-scheme", "default")
     write_settings_ini(THEME_LIGHT)
-
+    set_cursor_global()
 
 def set_dark() -> None:
     gsettings_set(GTK_SCHEMA, "gtk-theme", THEME_DARK)
     gsettings_set(GTK_SCHEMA, "icon-theme", ICON_THEME)
+    gsettings_set(GTK_SCHEMA, "cursor-theme", CURSOR_THEME)
+    gsettings_set(GTK_SCHEMA, "cursor-size", str(CURSOR_SIZE or 24))
     gsettings_set(GTK_SCHEMA, "color-scheme", "prefer-dark")
     write_settings_ini(THEME_DARK)
+    set_cursor_global()
 
 
 def main() -> None:
