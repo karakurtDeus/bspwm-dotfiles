@@ -13,57 +13,11 @@ COLOR_FOREGROUND = "#ffffff"
 COLOR_BACKGROUND = "#000000"
 
 
-def ensure_color_file() -> Path:
-    conf_dir = Path.home() / ".config/bspwm/conf"
-    conf_dir.mkdir(parents=True, exist_ok=True)
-
-    color_file = conf_dir / "color.conf"
-
-    if not color_file.exists():
-        color_file.write_text(
-            """# MAIN:
-# main accent color
-# example: MAIN=#329DA4
-MAIN=#329DA4
-""",
-            encoding="utf-8",
-        )
-
-    return color_file
-
-
-def ensure_font_file() -> Path:
-    conf_dir = Path.home() / ".config/bspwm/conf"
-    conf_dir.mkdir(parents=True, exist_ok=True)
-
-    font_file = conf_dir / "font.conf"
-
-    if not font_file.exists():
-        font_file.write_text(
-            """# FONT_SIZE_GLOBAL:
-# if set, overrides kitty, polybar, dunst and rofi values
-FONT_SIZE_GLOBAL=
-
-# FONT_SIZE_KITTY:
-FONT_SIZE_KITTY=10.5
-
-# FONT_SIZE_POLYBAR:
-FONT_SIZE_POLYBAR=10;2
-
-# FONT_SIZE_DUNST:
-FONT_SIZE_DUNST=10
-
-# FONT_SIZE_ROFI:
-FONT_SIZE_ROFI=10.5
-""",
-            encoding="utf-8",
-        )
-
-    return font_file
-
-
 def read_conf(path: Path) -> dict[str, str]:
     values = {}
+
+    if not path.exists():
+        return values
 
     for line in path.read_text(encoding="utf-8").splitlines():
         line = line.strip()
@@ -78,24 +32,14 @@ def read_conf(path: Path) -> dict[str, str]:
 
 
 def get_main_color() -> str:
-    values = read_conf(ensure_color_file())
+    path = Path.home() / ".config/bspwm/conf/color.conf"
+    values = read_conf(path)
     color = values.get("MAIN", DEFAULT_MAIN)
 
     if re.match(r"^#[0-9a-fA-F]{6}$", color):
         return color
 
     return DEFAULT_MAIN
-
-
-def get_rofi_font_size() -> str:
-    values = read_conf(ensure_font_file())
-
-    return (
-        values.get("FONT_SIZE_GLOBAL", "")
-        or values.get("FONT_SIZE_ROFI", "")
-        or values.get("FONT_SIZE_KITTY", "")
-        or "10.5"
-    )
 
 
 def hex_to_rgb(hex_color: str) -> tuple[int, int, int]:
@@ -118,19 +62,7 @@ def write_file(path: Path, content: str) -> bool:
         return False
 
 
-def write_dunst(main: str) -> bool:
-    path = Path.home() / ".config/dunst/dunstrc"
-
-    config = dunst_config(
-        main=main,
-        bg=COLOR_BACKGROUND,
-        fg=COLOR_FOREGROUND,
-    )
-
-    return write_file(path, config)
-
-
-def write_rofi(main: str, font_size: str) -> bool:
+def write_rofi(main: str) -> bool:
     path = Path.home() / ".config/rofi/config.rasi"
 
     config = rofi_config(
@@ -138,7 +70,18 @@ def write_rofi(main: str, font_size: str) -> bool:
         bg=COLOR_BACKGROUND,
         fg=COLOR_FOREGROUND,
         secondary=COLOR_SECONDARY_TEXT,
-        font_size=font_size,
+    )
+
+    return write_file(path, config)
+
+
+def write_dunst(main: str) -> bool:
+    path = Path.home() / ".config/dunst/dunstrc"
+
+    config = dunst_config(
+        main=main,
+        bg=COLOR_BACKGROUND,
+        fg=COLOR_FOREGROUND,
     )
 
     return write_file(path, config)
@@ -183,18 +126,16 @@ def reload_dunst() -> None:
 
 def main() -> None:
     main_color = get_main_color()
-    rofi_font_size = get_rofi_font_size()
 
     print("Loaded config:")
     print(f"MAIN={main_color}")
-    print(f"FONT_SIZE_ROFI={rofi_font_size}")
 
     if apply_bspwm_color(main_color):
         print("OK: bspwm focused_border_color")
     else:
         print("FAILED: bspwm focused_border_color")
 
-    if write_rofi(main_color, rofi_font_size):
+    if write_rofi(main_color):
         print("OK: write rofi config")
     else:
         print("FAILED: write rofi config")

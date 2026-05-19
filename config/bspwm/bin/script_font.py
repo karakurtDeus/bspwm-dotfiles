@@ -5,52 +5,42 @@ import re
 import subprocess
 
 
-def load_config():
-    conf_file = Path.home() / ".config" / "bspwm" / "conf" / "font.conf"
+def read_conf(path: Path) -> dict[str, str]:
+    values = {}
 
-    default = """# FONT_SIZE_GLOBAL:
-# if set, overrides kitty, polybar, dunst and rofi values
-FONT_SIZE_GLOBAL=
+    if not path.exists():
+        return values
 
-# FONT_SIZE_KITTY:
-FONT_SIZE_KITTY=10.5
+    for line in path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
 
-# FONT_SIZE_POLYBAR:
-FONT_SIZE_POLYBAR=10;2
-
-# FONT_SIZE_DUNST:
-FONT_SIZE_DUNST=10
-
-# FONT_SIZE_ROFI:
-FONT_SIZE_ROFI=10.5
-"""
-
-    conf_file.parent.mkdir(parents=True, exist_ok=True)
-
-    if not conf_file.exists():
-        conf_file.write_text(default, encoding="utf-8")
-
-    values = {
-        "FONT_SIZE_GLOBAL": "",
-        "FONT_SIZE_KITTY": "10.5",
-        "FONT_SIZE_DUNST": "10",
-    }
-
-    for line in conf_file.read_text(encoding="utf-8").splitlines():
-        if "=" not in line:
+        if not line or line.startswith("#") or "=" not in line:
             continue
 
-        key, value = line.strip().split("=", 1)
-        key = key.strip()
-        value = value.strip()
-
-        if key in values:
-            values[key] = value
+        key, value = line.split("=", 1)
+        values[key.strip()] = value.strip()
 
     return values
 
 
-def reload_dunst():
+def load_config() -> dict[str, str]:
+    path = Path.home() / ".config/bspwm/conf/font.conf"
+    values = read_conf(path)
+
+    return {
+        "FONT_SIZE_GLOBAL": values.get("FONT_SIZE_GLOBAL", ""),
+        "FONT_SIZE_KITTY": values.get("FONT_SIZE_KITTY", "10.5"),
+        "FONT_SIZE_POLYBAR": values.get("FONT_SIZE_POLYBAR", "10;3"),
+        "FONT_SIZE_DUNST": values.get("FONT_SIZE_DUNST", "10"),
+        "FONT_SIZE_ROFI": values.get("FONT_SIZE_ROFI", "10.5"),
+    }
+
+
+def font_value(config: dict[str, str], key: str) -> str:
+    return config["FONT_SIZE_GLOBAL"] or config[key]
+
+
+def reload_dunst() -> None:
     subprocess.run(
         ["killall", "dunst"],
         stdout=subprocess.DEVNULL,
@@ -64,23 +54,34 @@ def reload_dunst():
     )
 
 
-def change_kitty_font(font_size_global: str, font_size_kitty: str) -> bool:
+def reload_polybar() -> None:
+    subprocess.run(
+        ["killall", "-q", "polybar"],
+        stderr=subprocess.DEVNULL,
+    )
+
+    subprocess.run(
+        [
+            "sh",
+            "-c",
+            "while pgrep -x polybar >/dev/null; do sleep 0.5; done; polybar main &",
+        ],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+
+
+def change_kitty_font(font_size: str) -> bool:
     try:
-        path = Path.home() / ".config" / "kitty" / "kitty.conf"
+        path = Path.home() / ".config/kitty/kitty.conf"
 
         if not path.exists():
             print("kitty error: kitty.conf not found")
             return False
 
-        font_size = font_size_global if font_size_global else font_size_kitty
-
-        if not font_size:
-            return False
-
-        text = path.read_text(encoding="utf-8")
-        lines = text.splitlines()
-
-        cleaned_lines = []
+        lines = path.read_text(encoding="utf-8").splitlines()
+        new_lines = []
+        inserted = False
 
         for line in lines:
             stripped = line.strip()
@@ -91,12 +92,6 @@ def change_kitty_font(font_size_global: str, font_size_kitty: str) -> bool:
             if re.match(r"^\s*font_size\s+", line):
                 continue
 
-            cleaned_lines.append(line)
-
-        new_lines = []
-        inserted = False
-
-        for line in cleaned_lines:
             new_lines.append(line)
 
             if re.match(r"^\s*font_family\s+", line) and not inserted:
@@ -114,22 +109,15 @@ def change_kitty_font(font_size_global: str, font_size_kitty: str) -> bool:
         return False
 
 
-def change_dunst_font(font_size_global: str, font_size_dunst: str) -> bool:
+def change_dunst_font(font_size: str) -> bool:
     try:
-        path = Path.home() / ".config" / "dunst" / "dunstrc"
+        path = Path.home() / ".config/dunst/dunstrc"
 
         if not path.exists():
             print("dunst error: dunstrc not found")
             return False
 
-        font_size = font_size_global if font_size_global else font_size_dunst
-
-        if not font_size:
-            return False
-
-        text = path.read_text(encoding="utf-8")
-        lines = text.splitlines()
-
+        lines = path.read_text(encoding="utf-8").splitlines()
         new_lines = []
         replaced = False
 
@@ -141,8 +129,8 @@ def change_dunst_font(font_size_global: str, font_size_dunst: str) -> bool:
                 new_lines.append(line)
 
         if not replaced:
-            inserted = False
             result = []
+            inserted = False
 
             for line in new_lines:
                 result.append(line)
@@ -165,28 +153,96 @@ def change_dunst_font(font_size_global: str, font_size_dunst: str) -> bool:
         return False
 
 
-def main():
+def change_rofi_font(font_size: str) -> bool:
+    try:
+        path = Path.home() / ".config/rofi/config.rasi"
+
+        if not path.exists():
+            print("rofi error: config.rasi not found")
+            return False
+
+        text = path.read_text(encoding="utf-8")
+        replacement = f'font: "JetBrainsMono Nerd Font {font_size}";'
+
+        if re.search(r'font:\s*"[^"]+";', text):
+            text = re.sub(r'font:\s*"[^"]+";', replacement, text)
+        else:
+            text = re.sub(
+                r"(?m)^\*\s*\{",
+                "* {\n    " + replacement,
+                text,
+                count=1,
+            )
+
+        path.write_text(text, encoding="utf-8")
+        return True
+
+    except Exception as e:
+        print(f"rofi error: {e}")
+        return False
+
+
+def change_polybar_font(font_size: str) -> bool:
+    try:
+        path = Path.home() / ".config/polybar/config.ini"
+
+        if not path.exists():
+            print("polybar error: config.ini not found")
+            return False
+
+        text = path.read_text(encoding="utf-8")
+
+        pattern = r'(?m)^(\s*font-\d+\s*=\s*"[^"\n]*:size=)([^"\n]+)(")$'
+        text, count = re.subn(pattern, rf"\g<1>{font_size}\g<3>", text)
+
+        if count == 0:
+            print("polybar error: no font lines matched")
+            return False
+
+        path.write_text(text, encoding="utf-8")
+        return True
+
+    except Exception as e:
+        print(f"polybar error: {e}")
+        return False
+
+
+def main() -> None:
     config = load_config()
 
-    font_size_global = config["FONT_SIZE_GLOBAL"]
-    font_size_kitty = config["FONT_SIZE_KITTY"]
-    font_size_dunst = config["FONT_SIZE_DUNST"]
+    kitty_size = font_value(config, "FONT_SIZE_KITTY")
+    dunst_size = font_value(config, "FONT_SIZE_DUNST")
+    rofi_size = font_value(config, "FONT_SIZE_ROFI")
+    polybar_size = font_value(config, "FONT_SIZE_POLYBAR")
 
     print("Loaded config:")
-    print(f"FONT_SIZE_GLOBAL={font_size_global}")
-    print(f"FONT_SIZE_KITTY={font_size_kitty}")
-    print(f"FONT_SIZE_DUNST={font_size_dunst}")
+    print(f"FONT_SIZE_GLOBAL={config['FONT_SIZE_GLOBAL']}")
+    print(f"FONT_SIZE_KITTY={kitty_size}")
+    print(f"FONT_SIZE_DUNST={dunst_size}")
+    print(f"FONT_SIZE_ROFI={rofi_size}")
+    print(f"FONT_SIZE_POLYBAR={polybar_size}")
 
-    if change_kitty_font(font_size_global, font_size_kitty):
-        print("OK: kitty font_size changed")
+    if change_kitty_font(kitty_size):
+        print("OK: kitty font changed")
     else:
-        print("FAILED: kitty font_size changed")
+        print("FAILED: kitty font changed")
 
-    if change_dunst_font(font_size_global, font_size_dunst):
+    if change_dunst_font(dunst_size):
         print("OK: dunst font changed")
         reload_dunst()
     else:
         print("FAILED: dunst font changed")
+
+    if change_rofi_font(rofi_size):
+        print("OK: rofi font changed")
+    else:
+        print("FAILED: rofi font changed")
+
+    if change_polybar_font(polybar_size):
+        print("OK: polybar font changed")
+        reload_polybar()
+    else:
+        print("FAILED: polybar font changed")
 
 
 if __name__ == "__main__":
