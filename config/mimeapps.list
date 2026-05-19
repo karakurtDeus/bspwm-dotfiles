@@ -31,3 +31,4 @@ application/x-shellscript=code-oss.desktop
 [Added Associations]
 image/x-xcursor=code-oss.desktop;
 application/x-shellscript=code-oss.desktop;
+image/png=krita_png.desktop;

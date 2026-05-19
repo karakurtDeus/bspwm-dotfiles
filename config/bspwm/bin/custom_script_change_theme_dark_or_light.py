@@ -15,6 +15,7 @@ ICON_THEME = "Tokyonight-Dark-Cyan"
 FONT_NAME = "Adwaita Sans 11"
 CURSOR_THEME = "Qogir-cursors"
 CURSOR_SIZE = 24
+
 TOOLBAR_STYLE = "GTK_TOOLBAR_BOTH_HORIZ"
 TOOLBAR_ICON_SIZE = "GTK_ICON_SIZE_LARGE_TOOLBAR"
 BUTTON_IMAGES = 0
@@ -24,29 +25,6 @@ INPUT_FEEDBACK_SOUNDS = 1
 XFT_ANTIALIAS = 1
 XFT_HINTING = 1
 XFT_HINTSTYLE = "hintmedium"
-
-def set_cursor_global() -> None:
-    cursor_size = CURSOR_SIZE or 24
-
-    gsettings_set(GTK_SCHEMA, "cursor-theme", CURSOR_THEME)
-    gsettings_set(GTK_SCHEMA, "cursor-size", str(cursor_size))
-
-    xresources = Path.home() / ".Xresources"
-    content = xresources.read_text(encoding="utf-8") if xresources.exists() else ""
-
-    lines = [
-        line for line in content.splitlines()
-        if not line.strip().startswith("Xcursor.theme:")
-        and not line.strip().startswith("Xcursor.size:")
-    ]
-
-    lines.append(f"Xcursor.theme: {CURSOR_THEME}")
-    lines.append(f"Xcursor.size: {cursor_size}")
-
-    xresources.write_text("\n".join(lines) + "\n", encoding="utf-8")
-
-    subprocess.run(["xrdb", "-merge", str(xresources)], check=False)
-    subprocess.run(["xsetroot", "-cursor_name", "left_ptr"], check=False)
 
 
 def gsettings_get(schema: str, key: str) -> str:
@@ -64,6 +42,26 @@ def gsettings_set(schema: str, key: str, value: str) -> None:
         ["gsettings", "set", schema, key, value],
         check=True,
     )
+
+
+def write_default_cursor_theme() -> None:
+    content = f"""[Icon Theme]
+Inherits={CURSOR_THEME}
+"""
+
+    for path in (
+        Path.home() / ".icons/default/index.theme",
+        Path.home() / ".local/share/icons/default/index.theme",
+    ):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(content, encoding="utf-8")
+
+
+def set_cursor_global() -> None:
+    gsettings_set(GTK_SCHEMA, "cursor-theme", CURSOR_THEME)
+    gsettings_set(GTK_SCHEMA, "cursor-size", str(CURSOR_SIZE))
+    write_default_cursor_theme()
+    subprocess.run(["xsetroot", "-cursor_name", "left_ptr"], check=False)
 
 
 def build_settings_ini(theme_name: str) -> str:
@@ -86,32 +84,28 @@ gtk-xft-hintstyle={XFT_HINTSTYLE}
 
 
 def write_settings_ini(theme_name: str) -> None:
-    gtk3_dir = Path.home() / ".config" / "gtk-3.0"
-    gtk4_dir = Path.home() / ".config" / "gtk-4.0"
-
-    gtk3_dir.mkdir(parents=True, exist_ok=True)
-    gtk4_dir.mkdir(parents=True, exist_ok=True)
-
-    content = build_settings_ini(theme_name)
-
-    (gtk3_dir / "settings.ini").write_text(content, encoding="utf-8")
-    (gtk4_dir / "settings.ini").write_text(content, encoding="utf-8")
+    for gtk_dir in (
+        Path.home() / ".config/gtk-3.0",
+        Path.home() / ".config/gtk-4.0",
+    ):
+        gtk_dir.mkdir(parents=True, exist_ok=True)
+        (gtk_dir / "settings.ini").write_text(
+            build_settings_ini(theme_name),
+            encoding="utf-8",
+        )
 
 
 def set_light() -> None:
     gsettings_set(GTK_SCHEMA, "gtk-theme", THEME_LIGHT)
     gsettings_set(GTK_SCHEMA, "icon-theme", ICON_THEME)
-    gsettings_set(GTK_SCHEMA, "cursor-theme", CURSOR_THEME)
-    gsettings_set(GTK_SCHEMA, "cursor-size", str(CURSOR_SIZE or 24))
     gsettings_set(GTK_SCHEMA, "color-scheme", "default")
     write_settings_ini(THEME_LIGHT)
     set_cursor_global()
 
+
 def set_dark() -> None:
     gsettings_set(GTK_SCHEMA, "gtk-theme", THEME_DARK)
     gsettings_set(GTK_SCHEMA, "icon-theme", ICON_THEME)
-    gsettings_set(GTK_SCHEMA, "cursor-theme", CURSOR_THEME)
-    gsettings_set(GTK_SCHEMA, "cursor-size", str(CURSOR_SIZE or 24))
     gsettings_set(GTK_SCHEMA, "color-scheme", "prefer-dark")
     write_settings_ini(THEME_DARK)
     set_cursor_global()
@@ -133,6 +127,7 @@ def main() -> None:
             print(f"Switched to DARK: {THEME_DARK}")
 
         print(f"Icon theme: {ICON_THEME}")
+        print(f"Cursor theme: {CURSOR_THEME}")
 
     except subprocess.CalledProcessError as exc:
         print("gsettings command failed")

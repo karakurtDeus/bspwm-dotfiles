@@ -18,6 +18,20 @@ export XDG_SESSION_DESKTOP=bspwm
 export XDG_SESSION_TYPE=x11
 export GDK_BACKEND=x11
 export _JAVA_AWT_WM_NONREPARENTING=1
+
+export XCURSOR_THEME=Qogir-cursors
+export XCURSOR_SIZE=24
+export GTK_THEME="$(gsettings get org.gnome.desktop.interface gtk-theme | tr -d "'")"
+
+mkdir -p "$HOME/.icons/default" "$HOME/.local/share/icons/default"
+
+printf '[Icon Theme]\nInherits=Qogir-cursors\n' > "$HOME/.icons/default/index.theme"
+printf '[Icon Theme]\nInherits=Qogir-cursors\n' > "$HOME/.local/share/icons/default/index.theme"
+
+gsettings set org.gnome.desktop.interface cursor-theme Qogir-cursors
+gsettings set org.gnome.desktop.interface cursor-size 24
+
+xsetroot -cursor_name left_ptr
 # ===
 
 # hotkey
